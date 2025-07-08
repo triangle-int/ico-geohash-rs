@@ -43,7 +43,7 @@ pub fn hash_to_vec(hash: &str) -> Vector3<f64> {
     hash_to_tri_with_tri(&hash[1..], &next).center()
 }
 
-pub fn hahs_to_tri(hash: &str) -> Triangle {
+pub fn hash_to_tri(hash: &str) -> Triangle {
     let index = (hash.chars().next().unwrap() as u8 - 'a' as u8) as usize;
     let next = TRIANGLES[index];
 
