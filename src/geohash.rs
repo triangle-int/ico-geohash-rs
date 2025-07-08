@@ -25,22 +25,29 @@ pub fn vec_to_hash(v: &Vector3<f64>, depth: u8) -> String {
     format!("{}{}", ('a' as u8 + first as u8) as char, rest)
 }
 
-fn hash_to_vec_with_tri(hash: &str, t: &Triangle) -> Vector3<f64> {
+fn hash_to_tri_with_tri(hash: &str, t: &Triangle) -> Triangle {
     if hash.is_empty() {
-        return t.center();
+        return *t;
     }
 
     let index = hash[..1].parse::<usize>().unwrap();
     let next = t.subdivide()[index];
 
-    hash_to_vec_with_tri(&hash[1..], &next)
+    hash_to_tri_with_tri(&hash[1..], &next)
 }
 
 pub fn hash_to_vec(hash: &str) -> Vector3<f64> {
     let index = (hash.chars().next().unwrap() as u8 - 'a' as u8) as usize;
     let next = TRIANGLES[index];
 
-    hash_to_vec_with_tri(&hash[1..], &next)
+    hash_to_tri_with_tri(&hash[1..], &next).center()
+}
+
+pub fn hahs_to_tri(hash: &str) -> Triangle {
+    let index = (hash.chars().next().unwrap() as u8 - 'a' as u8) as usize;
+    let next = TRIANGLES[index];
+
+    hash_to_tri_with_tri(&hash[1..], &next)
 }
 
 #[cfg(test)]
