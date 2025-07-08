@@ -1,6 +1,6 @@
 use crate::{constants::TRIANGLES, triangle::Triangle};
-use std::f64::consts::PI;
 
+/*
 const AREA_RATIO: f64 = 10.0;
 
 fn find_optimal_level(area: f64) -> u8 {
@@ -12,16 +12,15 @@ fn find_optimal_level(area: f64) -> u8 {
 
     l.round() as u8
 }
+*/
 
 pub trait Coverable {
     fn intersects(&self, tri: &Triangle) -> bool;
-    fn area(&self) -> f64;
 
-    fn find_coverage(&self) -> Vec<String>
+    fn find_coverage(&self, depth: u8) -> Vec<String>
     where
         Self: Sized,
     {
-        let depth = find_optimal_level(self.area());
         let mut result = Vec::new();
 
         for i in 0..TRIANGLES.len() {
@@ -37,11 +36,10 @@ pub trait Coverable {
         result
     }
 
-    fn find_tri_coverage(&self) -> Vec<Triangle>
+    fn find_tri_coverage(&self, depth: u8) -> Vec<Triangle>
     where
         Self: Sized,
     {
-        let depth = find_optimal_level(self.area());
         let mut result = Vec::new();
 
         for i in 0..TRIANGLES.len() {

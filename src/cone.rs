@@ -1,6 +1,5 @@
 use crate::{coverage::Coverable, segment::Segment, triangle::Triangle};
 use nalgebra::Vector3;
-use std::f64::consts::PI;
 
 const INTERSECTION_ITERS: u8 = 32;
 
@@ -42,9 +41,5 @@ impl Coverable for Cone {
         tri.contains_point(&self.center)
             || tri.0.iter().any(|p| self.contains_point(p))
             || tri.segments().iter().any(|s| self.intersects_segment(s))
-    }
-
-    fn area(&self) -> f64 {
-        2.0 * PI * (1.0 - self.angle.cos())
     }
 }
