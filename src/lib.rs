@@ -1,14 +1,10 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+#![feature(more_float_constants)]
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+extern crate nalgebra;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub mod cone;
+mod constants;
+pub mod coverage;
+pub mod geohash;
+pub mod segment;
+pub mod triangle;
