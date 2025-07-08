@@ -44,10 +44,6 @@ impl Coverable for Cone {
             || tri.segments().iter().any(|s| self.intersects_segment(s))
     }
 
-    fn contains(&self, tri: &Triangle) -> bool {
-        tri.0.iter().all(|p| self.contains_point(p))
-    }
-
     fn area(&self) -> f64 {
         2.0 * PI * (1.0 - self.angle.cos())
     }

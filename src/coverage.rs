@@ -15,7 +15,6 @@ fn find_optimal_level(area: f64) -> u8 {
 
 pub trait Coverable {
     fn intersects(&self, tri: &Triangle) -> bool;
-    fn contains(&self, tri: &Triangle) -> bool;
     fn area(&self) -> f64;
 
     fn find_coverage(&self) -> Vec<String>
@@ -64,7 +63,7 @@ fn find_coverage_with_tri(
         return;
     }
 
-    if shape.contains(&tri) || acc.len() >= depth as usize {
+    if acc.len() >= depth as usize {
         res.push(acc);
         return;
     }
@@ -87,7 +86,7 @@ fn find_tri_coverage_with_tri(
         return;
     }
 
-    if shape.contains(&tri) || curr_depth >= depth {
+    if curr_depth >= depth {
         res.push(*tri);
         return;
     }
