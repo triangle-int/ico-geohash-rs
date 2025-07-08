@@ -37,6 +37,20 @@ pub trait Coverable {
 
         result
     }
+
+    fn find_tri_coverage(&self) -> Vec<Triangle>
+    where
+        Self: Sized,
+    {
+        let depth = find_optimal_level(self.area());
+        let mut result = Vec::new();
+
+        for i in 0..TRIANGLES.len() {
+            find_tri_coverage_with_tri(self, &TRIANGLES[i], depth, 1, &mut result);
+        }
+
+        result
+    }
 }
 
 fn find_coverage_with_tri(
@@ -59,5 +73,28 @@ fn find_coverage_with_tri(
 
     for i in 0..tris.len() {
         find_coverage_with_tri(shape, &tris[i], depth, acc.clone() + &i.to_string(), res);
+    }
+}
+
+fn find_tri_coverage_with_tri(
+    shape: &impl Coverable,
+    tri: &Triangle,
+    depth: u8,
+    curr_depth: u8,
+    res: &mut Vec<Triangle>,
+) {
+    if !shape.intersects(&tri) {
+        return;
+    }
+
+    if shape.contains(&tri) || curr_depth >= depth {
+        res.push(*tri);
+        return;
+    }
+
+    let tris = tri.subdivide();
+
+    for i in 0..tris.len() {
+        find_tri_coverage_with_tri(shape, &tris[i], depth, curr_depth + 1, res);
     }
 }
