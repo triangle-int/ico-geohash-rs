@@ -50,6 +50,39 @@ pub fn hash_to_tri(hash: &str) -> Triangle {
     hash_to_tri_with_tri(&hash[1..], &next)
 }
 
+fn find_tris_of_level_with_tri(
+    triangle: &Triangle,
+    acc: String,
+    depth: u8,
+    out: &mut Vec<(String, Triangle)>,
+) {
+    if acc.len() >= depth as usize {
+        out.push((acc, *triangle));
+        return;
+    }
+
+    let next = triangle.subdivide();
+
+    for i in 0..next.len() {
+        find_tris_of_level_with_tri(&next[i], format!("{}{}", acc, i), depth, out);
+    }
+}
+
+pub fn find_tris_of_level(depth: u8) -> Vec<(String, Triangle)> {
+    let mut res = Vec::new();
+
+    for i in 0..TRIANGLES.len() {
+        find_tris_of_level_with_tri(
+            &TRIANGLES[i],
+            (('a' as u8 + i as u8) as char).into(),
+            depth,
+            &mut res,
+        );
+    }
+
+    res
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -70,6 +103,16 @@ mod tests {
             let hash2 = vec_to_hash(&vec, 21);
 
             assert_eq!(hash, hash2);
+        }
+    }
+
+    #[test]
+    fn test_find_tris_of_level() {
+        let tris = find_tris_of_level(3);
+        assert_eq!(tris.len(), 20 * 4 * 4);
+
+        for (hash, _) in &tris {
+            assert_eq!(hash.len(), 3);
         }
     }
 }
