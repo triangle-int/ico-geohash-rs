@@ -83,6 +83,25 @@ pub fn find_tris_of_level(depth: u8) -> Vec<(String, Triangle)> {
     res
 }
 
+pub fn find_neighbours(hash: &str) -> [String; 3] {
+    let triangle = hash_to_tri(hash);
+    let center = triangle.center();
+
+    let mut res = <[String; 3]>::default();
+
+    for i in 0..3 {
+        let v1 = triangle.0[i];
+        let v2 = triangle.0[(i + 1) % 3];
+
+        let n = v1.cross(&v2).normalize();
+        let mirrored = center - 2.0 * n.dot(&center) * n;
+
+        res[i] = vec_to_hash(&mirrored, hash.len() as u8);
+    }
+
+    res
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -114,5 +133,15 @@ mod tests {
         for (hash, _) in &tris {
             assert_eq!(hash.len(), 3);
         }
+    }
+
+    #[test]
+    fn test_find_neighbours() {
+        let hash = "b11111333";
+        let neighbours = find_neighbours(&hash);
+
+        assert!(neighbours.iter().any(|s| s == "b11111331"));
+        assert!(neighbours.iter().any(|s| s == "b11111332"));
+        assert!(neighbours.iter().any(|s| s == "b11111330"));
     }
 }
