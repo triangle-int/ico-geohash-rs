@@ -140,8 +140,8 @@ mod tests {
         let hash = "b11111333";
         let neighbours = find_neighbours(&hash);
 
-        assert!(neighbours.iter().any(|s| s == "b11111331"));
-        assert!(neighbours.iter().any(|s| s == "b11111332"));
-        assert!(neighbours.iter().any(|s| s == "b11111330"));
+        assert!(neighbours.contains(&"b11111331".into()));
+        assert!(neighbours.contains(&"b11111332".into()));
+        assert!(neighbours.contains(&"b11111330".into()));
     }
 }
