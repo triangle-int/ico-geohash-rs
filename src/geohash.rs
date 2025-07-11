@@ -87,7 +87,7 @@ pub fn find_neighbours(hash: &str) -> [String; 3] {
     let triangle = hash_to_tri(hash);
     let center = triangle.center();
 
-    let mut res: [String; 3] = [String::from(""), String::from(""), String::from("")];
+    let mut res: [String; 3] = Default::default();
 
     for i in 0..3 {
         let v1 = triangle.0[i];
