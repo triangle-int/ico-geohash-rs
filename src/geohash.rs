@@ -83,11 +83,11 @@ pub fn find_tris_of_level(depth: u8) -> Vec<(String, Triangle)> {
     res
 }
 
-pub fn find_neighbours(hash: &str) -> Vec<String> {
+pub fn find_neighbours(hash: &str) -> [String; 3] {
     let triangle = hash_to_tri(hash);
     let center = triangle.center();
 
-    let mut res = Vec::new();
+    let mut res: [String; 3] = [String::from(""), String::from(""), String::from("")];
 
     for i in 0..3 {
         let v1 = triangle.0[i];
@@ -96,7 +96,7 @@ pub fn find_neighbours(hash: &str) -> Vec<String> {
         let n = v1.cross(&v2).normalize();
         let mirrored = center - 2.0 * n.dot(&center) * n;
 
-        res.push(vec_to_hash(&mirrored, hash.len() as u8));
+        res[i] = vec_to_hash(&mirrored, hash.len() as u8);
     }
 
     res
