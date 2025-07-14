@@ -17,7 +17,7 @@ fn find_optimal_level(area: f64) -> u8 {
 pub trait Coverable {
     fn intersects(&self, tri: &Triangle) -> bool;
 
-    fn find_coverage(&self, depth: u8) -> Vec<String>
+    fn find_coverage(&self, depth: u8) -> Vec<(String, Triangle)>
     where
         Self: Sized,
     {
@@ -35,19 +35,6 @@ pub trait Coverable {
 
         result
     }
-
-    fn find_tri_coverage(&self, depth: u8) -> Vec<Triangle>
-    where
-        Self: Sized,
-    {
-        let mut result = Vec::new();
-
-        for i in 0..TRIANGLES.len() {
-            find_tri_coverage_with_tri(self, &TRIANGLES[i], depth, 1, &mut result);
-        }
-
-        result
-    }
 }
 
 fn find_coverage_with_tri(
@@ -55,14 +42,14 @@ fn find_coverage_with_tri(
     tri: &Triangle,
     depth: u8,
     acc: String,
-    res: &mut Vec<String>,
+    res: &mut Vec<(String, Triangle)>,
 ) {
     if !shape.intersects(&tri) {
         return;
     }
 
     if acc.len() >= depth as usize {
-        res.push(acc);
+        res.push((acc, *tri));
         return;
     }
 
@@ -70,28 +57,5 @@ fn find_coverage_with_tri(
 
     for i in 0..tris.len() {
         find_coverage_with_tri(shape, &tris[i], depth, acc.clone() + &i.to_string(), res);
-    }
-}
-
-fn find_tri_coverage_with_tri(
-    shape: &impl Coverable,
-    tri: &Triangle,
-    depth: u8,
-    curr_depth: u8,
-    res: &mut Vec<Triangle>,
-) {
-    if !shape.intersects(&tri) {
-        return;
-    }
-
-    if curr_depth >= depth {
-        res.push(*tri);
-        return;
-    }
-
-    let tris = tri.subdivide();
-
-    for i in 0..tris.len() {
-        find_tri_coverage_with_tri(shape, &tris[i], depth, curr_depth + 1, res);
     }
 }
