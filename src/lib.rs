@@ -1,5 +1,3 @@
-#![feature(more_float_constants)]
-
 extern crate nalgebra;
 
 pub mod cone;

@@ -1,9 +1,9 @@
 use crate::triangle::Triangle;
 use nalgebra::Vector3;
-use std::f64::consts::PHI;
 
 // 1 / sqrt(1 + phi^2)
 const MAG: f64 = 0.5257311121191336;
+const PHI: f64 = 1.618033988749895;
 const X: f64 = 1.0 * MAG;
 const Z: f64 = PHI * MAG;
 const N: f64 = 0.0;
