@@ -22,8 +22,8 @@ impl Cone {
                 return true;
             }
 
-            let fst = s.0 + (s.1 - s.0) / 3.0;
-            let snd = s.0 + (s.1 - s.0) * 2.0 / 3.0;
+            let fst = (s.0 + (s.1 - s.0) / 3.0).normalize();
+            let snd = (s.0 + (s.1 - s.0) * 2.0 / 3.0).normalize();
 
             if self.center.dot(&fst) < self.center.dot(&snd) {
                 s.0 = fst
