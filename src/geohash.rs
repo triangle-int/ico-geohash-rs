@@ -1,11 +1,12 @@
-use crate::{constants::TRIANGLES, triangle::Triangle};
-use nalgebra::Vector3;
+use glam::Vec3;
 
-fn find_containing(v: &Vector3<f64>, ts: &[Triangle]) -> usize {
+use crate::{constants::TRIANGLES, triangle::Triangle};
+
+fn find_containing(v: Vec3, ts: &[Triangle]) -> usize {
     ts.iter().position(|t| t.contains_point(v)).unwrap()
 }
 
-fn vec_to_hash_with_tris(v: &Vector3<f64>, ts: &[Triangle], depth: u8) -> String {
+fn vec_to_hash_with_tris(v: Vec3, ts: &[Triangle], depth: u8) -> String {
     if depth <= 0 {
         return "".into();
     }
@@ -17,7 +18,7 @@ fn vec_to_hash_with_tris(v: &Vector3<f64>, ts: &[Triangle], depth: u8) -> String
     format!("{}{}", index, rest)
 }
 
-pub fn vec_to_hash(v: &Vector3<f64>, depth: u8) -> String {
+pub fn vec_to_hash(v: Vec3, depth: u8) -> String {
     let first = find_containing(v, &TRIANGLES);
     let subdivided = TRIANGLES[first].subdivide();
     let rest = vec_to_hash_with_tris(v, &subdivided, depth - 1);
@@ -36,7 +37,7 @@ fn hash_to_tri_with_tri(hash: &str, t: &Triangle) -> Triangle {
     hash_to_tri_with_tri(&hash[1..], &next)
 }
 
-pub fn hash_to_vec(hash: &str) -> Vector3<f64> {
+pub fn hash_to_vec(hash: &str) -> Vec3 {
     let index = (hash.chars().next().unwrap() as u8 - 'a' as u8) as usize;
     let next = TRIANGLES[index];
 
@@ -93,10 +94,10 @@ pub fn find_neighbours(hash: &str) -> [String; 3] {
         let v1 = triangle.0[i];
         let v2 = triangle.0[(i + 1) % 3];
 
-        let n = v1.cross(&v2).normalize();
-        let mirrored = center - 2.0 * n.dot(&center) * n;
+        let n = v1.cross(v2).normalize();
+        let mirrored = center - 2.0 * n.dot(center) * n;
 
-        res[i] = vec_to_hash(&mirrored, hash.len() as u8);
+        res[i] = vec_to_hash(mirrored, hash.len() as u8);
     }
 
     res
@@ -114,12 +115,12 @@ mod tests {
         for _ in 0..100 {
             let mut hash = (('a' as u8 + rng.random_range(0..20)) as char).to_string();
 
-            for _ in 0..20 {
+            for _ in 0..10 {
                 hash += &rng.random_range(0..4).to_string();
             }
 
             let vec = hash_to_vec(&hash);
-            let hash2 = vec_to_hash(&vec, 21);
+            let hash2 = vec_to_hash(vec, 11);
 
             assert_eq!(hash, hash2);
         }

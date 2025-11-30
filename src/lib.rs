@@ -1,4 +1,4 @@
-extern crate nalgebra;
+extern crate glam;
 
 pub mod cone;
 mod constants;
