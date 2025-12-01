@@ -1,17 +1,18 @@
+use glam::Vec3;
+
 use crate::{coverage::Coverable, segment::Segment, triangle::Triangle};
-use nalgebra::Vector3;
 
 const INTERSECTION_ITERS: u8 = 32;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Cone {
-    pub center: Vector3<f64>,
-    pub angle: f64,
+    pub center: Vec3,
+    pub angle: f32,
 }
 
 impl Cone {
-    fn contains_point(&self, p: &Vector3<f64>) -> bool {
-        p.angle(&self.center) < self.angle
+    fn contains_point(&self, p: &Vec3) -> bool {
+        p.angle_between(self.center) < self.angle
     }
 
     fn intersects_segment(&self, s: &Segment) -> bool {
@@ -25,7 +26,7 @@ impl Cone {
             let fst = (s.0 + (s.1 - s.0) / 3.0).normalize();
             let snd = (s.0 + (s.1 - s.0) * 2.0 / 3.0).normalize();
 
-            if self.center.dot(&fst) < self.center.dot(&snd) {
+            if self.center.dot(fst) < self.center.dot(snd) {
                 s.0 = fst
             } else {
                 s.1 = snd
@@ -38,7 +39,7 @@ impl Cone {
 
 impl Coverable for Cone {
     fn intersects(&self, tri: &Triangle) -> bool {
-        tri.contains_point(&self.center)
+        tri.contains_point(self.center)
             || tri.0.iter().any(|p| self.contains_point(p))
             || tri.segments().iter().any(|s| self.intersects_segment(s))
     }

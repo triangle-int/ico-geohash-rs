@@ -1,8 +1,9 @@
+use glam::Vec3;
+
 use crate::segment::Segment;
-use nalgebra::Vector3;
 
 #[derive(Debug, Clone, Copy)]
-pub struct Triangle(pub [Vector3<f64>; 3]);
+pub struct Triangle(pub [Vec3; 3]);
 
 impl Triangle {
     pub fn segments(&self) -> [Segment; 3] {
@@ -13,9 +14,9 @@ impl Triangle {
         ]
     }
 
-    pub fn contains_point(&self, p: &Vector3<f64>) -> bool {
+    pub fn contains_point(&self, p: Vec3) -> bool {
         for i in 0..3 {
-            let n = self.0[i].cross(&self.0[(i + 1) % 3]);
+            let n = self.0[i].cross(self.0[(i + 1) % 3]);
 
             if n.dot(p) > 0.0 {
                 return false;
@@ -40,7 +41,7 @@ impl Triangle {
         ]
     }
 
-    pub fn center(&self) -> Vector3<f64> {
+    pub fn center(&self) -> Vec3 {
         (self.0[0] + self.0[1] + self.0[2]).normalize()
     }
 }
